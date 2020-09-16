@@ -1,2 +1,2 @@
 # RandPath
-Generates a random continuous path with no intersections
+Draws a randomly generated path with no intersections and saves it as a .png image
