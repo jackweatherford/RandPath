@@ -112,11 +112,11 @@ def generateGrid(w, h, path_length):
 	# Possible choices when chosing which direction to go next, 1-8 clockwise starting from top left
 	dirs = [_ for _ in range(1,9)]
 	# Keeps track of complete path
-	path = []
+	path = [head.copy()]
 	# Keeps track of previous dir
 	prev_dir = 0
 	# Keeps track of all previous dirs
-	prev_dirs = []
+	prev_dirs = [0]
 	# Keeps track of which heads will lead to failure
 	failed = []
 	# Main loop
@@ -210,10 +210,7 @@ def generateGrid(w, h, path_length):
 	
 	return grid
 
-def saveToFile(grid):
-	
-	# File name for output image
-	filename = input('Enter a filename: ') + '.png'
+def saveToFile(filename, grid):
 	
 	# Write to file from numpy array (grid)
 	imwrite(filename, grid)
@@ -229,10 +226,12 @@ if __name__ == '__main__':
 	# How many black pixels to use in the path
 	path_length = 1000
 	
+	filename = input('Enter a filename: ') + '.png'
+	
 	print('Generating image...')
 	
 	grid = generateGrid(w, h, path_length)
 
 	print('Image generated!')
 	
-	saveToFile(grid)
+	saveToFile(filename, grid)
