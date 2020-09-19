@@ -119,12 +119,28 @@ def generateGrid(w, h, path_length):
 	prev_dirs = [0]
 	# Keeps track of which heads will lead to failure
 	failed = []
+	
+	max_points = 0
+	max_grid = []
+	max_failed = []
+
 	# Main loop
 	while points < path_length:
 		# If all directions fail
 		if len(dirs) == 0:
+			if points > max_points:
+				max_points = points
+				max_grid = grid.copy()
+				max_failed = failed.copy()
+			
 			grid[head[1], head[0]] = 1
-			prev_dir = prev_dirs.pop()
+			# TODO: - remove failed paths adjacent to head.
+			# - if in a chain of fails, remove previous fail from fails.
+			prev_dirs.pop()
+			try:
+				prev_dir = prev_dirs[-1]
+			except IndexError:
+				return max_grid, max_failed
 			failed.append(path.pop())
 			dirs = [_ for _ in range(1,9)]
 			head = path[-1].copy()
@@ -224,14 +240,31 @@ if __name__ == '__main__':
 	# w: Width, h: Height of image
 	w, h = 101, 101
 	# How many black pixels to use in the path
-	path_length = 1000
+	path_length = 2000
 	
 	filename = input('Enter a filename: ') + '.png'
 	
 	print('Generating image...')
 	
-	grid = generateGrid(w, h, path_length)
+	grid, failed = generateGrid(w, h, path_length)
+
+	new_grid = np.zeros((h, w, 3), dtype=np.uint8)
+	
+	for i in range(w):
+		for j in range(h):
+			p = grid[j][i]
+			if p == 0:
+				new_p = [0, 0, 0]
+			elif p == 1:
+				if [i, j] in failed:
+					new_p = [255, 0, 0]
+				else:
+					new_p = [255, 255, 255]
+			new_grid[j][i] = new_p
+
+	# grid = grid * 255
+	# grid = grid.astype(np.uint8)
 
 	print('Image generated!')
 	
-	saveToFile(filename, grid)
+	saveToFile(filename, new_grid)
