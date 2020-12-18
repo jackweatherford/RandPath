@@ -256,10 +256,12 @@ if __name__ == '__main__':
 			if p == 0:
 				new_p = [0, 0, 0]
 			elif p == 1:
+				'''
 				if [i, j] in failed:
 					new_p = [255, 0, 0]
 				else:
-					new_p = [255, 255, 255]
+				'''
+				new_p = [255, 255, 255]
 			new_grid[j][i] = new_p
 
 	# grid = grid * 255
